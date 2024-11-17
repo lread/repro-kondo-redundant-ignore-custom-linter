@@ -2,6 +2,8 @@
 
 This little repro repo exists to illustrate a clj-kondo behaviour around hooks and false positives for the `:redundant-ignore` finding.
 
+Issue: https://github.com/clj-kondo/clj-kondo/issues/2433
+
 In link:/src/foobar/baz.clj[src/foobar/baz.clj], you'll find a silly little macro `(dingo [something & body])`.
 It binds `something` to `42` for the given `body`.
 
