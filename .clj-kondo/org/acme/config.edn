@@ -1,0 +1,2 @@
+{:hooks {:analyze-call {foobar.baz/dingo org.acme/dingo}}
+ :linters {:acme/foo-not-good {:level :error}}}
