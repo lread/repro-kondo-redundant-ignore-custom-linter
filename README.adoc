@@ -13,12 +13,31 @@ The hook:
 
 The test source has three calls to `dingo`.
 
-* The first should raise not findings.
+. The first call should not raise findings:
++
+[source,clojure]
+----
+(dingo bar (str bar))
+;; => "42"
+----
 This works.
-* The second would normally raise a finding from our hook but is marked to be ignored.
+. The second would normally raise a finding from our hook but is marked to be ignored.
++
+[source,clojure]
+----
+#_{:clj-kondo/ignore [:acme/foo-not-good]}
+(dingo foo (str foo))
+;; => "42"
+----
 Clj-kondo raises a `:redundant-ignore` finding.
 It should not do that.
-* The third should raise a finding from our hook.
+. The third should raise a finding from our hook.
++
+[source,clojure]
+----
+(dingo foo (str foo))
+;; => "42"
+----
 This works.
 
 From root dir, if we run:
@@ -30,8 +49,8 @@ $ clj-kondo --lint src
 We see the following output:
 [source,shell]
 ----
-src/foobar/baz.clj:17:3: info: Redundant ignore
-src/foobar/baz.clj:23:8: error: How dare foo!
+src/foobar/baz.clj:16:3: info: Redundant ignore
+src/foobar/baz.clj:21:8: error: How dare foo!
 linting took 16ms, errors: 1, warnings: 0
 ----
 
