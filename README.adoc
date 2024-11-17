@@ -1,0 +1,38 @@
+= repro-kondo-redundant-ignore-custom-linter
+
+This little repro repo exists to illustrate a clj-kondo behaviour around hooks and false positives for the `:redundant-ignore` finding.
+
+In link:/src/foobar/baz.clj[src/foobar/baz.clj], you'll find a silly little macro `(dingo [something & body])`.
+It binds `something` to `42` for the given `body`.
+
+You'll find a clj-kondo hook for `dingo` in link:/.clj-kondo/org/acme/org/acme.clj[.clj-kondo/org/acme/org/acme.clj] and its associated config under link:/.clj-kondo/org/acme/config.edn[.clj-kondo/org/acme/config.edn].
+The hook:
+
+* records a finding if `something` is `foo`.
+* sets up the binding for `something` so clj-kondo can become aware of it
+
+The test source has three calls to `dingo`.
+
+* The first should raise not findings.
+This works.
+* The second would normally raise a finding from our hook but is marked to be ignored.
+Clj-kondo raises a `:redundant-ignore` finding.
+It should not do that.
+* The third should raise a finding from our hook.
+This works.
+
+From root dir, if we run:
+[source,shell]
+----
+$ clj-kondo --lint src
+----
+
+We see the following output:
+[source,shell]
+----
+src/foobar/baz.clj:17:3: info: Redundant ignore
+src/foobar/baz.clj:23:8: error: How dare foo!
+linting took 16ms, errors: 1, warnings: 0
+----
+
+The Redundant ignore finding is unexpected.
