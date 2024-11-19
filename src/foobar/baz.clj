@@ -20,3 +20,12 @@
 ;; problem, `something` is `foo`, clj-kondo should report the problem
 (dingo foo (str foo))
 ;; => "42"
+
+;; simpler case, explore a finding from a built-in linter (instead of custom linter from hook)
+
+;; problem, unused binding `moodog`
+(dingo moodog (println "hello"))
+
+;; unused binding supressed
+#_{:clj-kondo/ignore [:unused-binding]}
+(dingo moodog (println "hello"))
